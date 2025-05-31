@@ -23,6 +23,7 @@ export function formatProposalForPrisma(proposal: ProposalI) {
 }
 
 export function formatPrismaToProposal(prismaProposal: any): ProposalI {
+//proposals
   return {
     id: prismaProposal.id,
     choose_person: prismaProposal.choosePerson ?? "",
