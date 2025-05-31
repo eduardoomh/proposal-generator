@@ -1,0 +1,121 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider   = "prisma-client-js"
+  js_target = "esnext"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Proposal {
+  id                       String   @id @default(cuid())
+  choosePerson             String?  @map("choose_person")
+  preparedBy               String   @map("prepared_by")
+
+  // Company Information
+  presentedToName          String   @map("presented_to_name")
+  companyName              String   @map("company_name")
+  emailAddress             String   @map("email_address")
+
+  // Invoicing Details
+  initialInvoiceAmount     Float    @map("initial_invoice_amount")
+  minimumRetainerAmount    Float    @map("minimum_retainer_amount")
+
+  // Estimates
+  estimatedCost            Float    @map("estimated_cost")
+  estimatedHours           Float    @map("estimated_hours")
+
+  // Resource Estimates
+  engineeringRate          Float    @map("engineering_rate")
+  engineeringPercentage    Int      @map("engineering_percentage")
+  architectureRate         Float    @map("architecture_rate")
+  architecturePercentage   Int      @map("architecture_percentage")
+  srArchitectureRate       Float    @map("sr_architecture_rate")
+  srArchitecturePercentage Int      @map("sr_architecture_percentage")
+
+  // Project Details
+  language                 Language
+  description              String
+  deliverables             String
+
+  createdAt                DateTime @default(now()) @map("created_at")
+
+  @@map("proposals")
+}
+
+model Template {
+  id                       String   @id @default(cuid())
+  title                    String
+
+  // Invoicing Details
+  initialInvoiceAmount     Float    @map("initial_invoice_amount")
+  minimumRetainerAmount    Float    @map("minimum_retainer_amount")
+
+  // Estimates
+  estimatedCost            Float    @map("estimated_cost")
+  estimatedHours           Float    @map("estimated_hours")
+
+  // Resource Estimates
+  engineeringRate          Float    @map("engineering_rate")
+  engineeringPercentage    Float    @map("engineering_percentage")
+  architectureRate         Float    @map("architecture_rate")
+  architecturePercentage   Float    @map("architecture_percentage")
+  srArchitectureRate       Float    @map("sr_architecture_rate")
+  srArchitecturePercentage Float    @map("sr_architecture_percentage")
+
+  // Project Details
+  language                 Language
+  description              String
+  deliverables             String
+
+  createdAt                DateTime @default(now()) @map("created_at")
+
+  @@map("templates")
+}
+
+model PDFContent {
+  id                    String   @id @default(cuid())
+  title                 String
+  language              Language
+
+  // General
+  generalText1          String   @map("general_text_1")
+
+  // Who Will Work
+  whoWillWorkText1      String   @map("who_will_work_text_1")
+
+  // How We Get Started
+  howWeGetStartedText1  String   @map("how_we_get_started_text_1")
+
+  // How You Are Billed
+  howYouAreBilledText1  String   @map("how_you_are_billed_text_1")
+  howYouAreBilledText2  String   @map("how_you_are_billed_text_2")
+  howYouAreBilledAlert  String   @map("how_you_are_billed_alert")
+
+  // How We Keep Going
+  howWeKeepGoingText1   String   @map("how_we_keep_going_text_1")
+  howWeKeepGoingAlert   String   @map("how_we_keep_going_alert")
+
+  // Availability and SLA
+  availabilityText1     String   @map("availability_and_sla_text_1")
+
+  // Estimates
+  estimatesText1        String   @map("estimates_text_1")
+
+  createdAt             DateTime @default(now()) @map("created_at")
+
+  @@map("pdf_content")
+}
+
+// Enum for language
+enum Language {
+  en
+  es
+}

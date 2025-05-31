@@ -6,6 +6,8 @@ import TextEditor from "./TextEditor";
 import Title from "../basics/Title";
 import Button from "../basics/Button";
 import MainContainer from "../containers/MainContainer";
+import Notification from "../basics/Notification";
+import { useFetcher } from "@remix-run/react";
 
 interface FormContentProps {
     proposalData?: any;
@@ -14,6 +16,9 @@ interface FormContentProps {
 type ProposalKey = keyof ProposalI;
 
 export default function ProposalForm({ proposalData }: FormContentProps) {
+    const fetcher = useFetcher();
+    const isLoading = fetcher.state !== "idle";
+    const [notification, setNotification] = useState<{ type: "success" | "error"; message: string } | null>(null);
     const [percentagesValid, setPercentagesValid] = useState(true);
     const [proposal, setProposal] = useState({
         prepared_by: "Abraham Rios",
@@ -139,12 +144,41 @@ export default function ProposalForm({ proposalData }: FormContentProps) {
     };
 
     const onSubmit = () => {
-        const proposalResult = JSON.stringify(proposal)
+        const proposalResult = JSON.stringify(proposal);
         console.log(proposalResult);
+        fetcher.submit(
+            { proposal: proposalResult },
+            {
+                method: "post",
+                action: "/api/proposals",
+                encType: "application/x-www-form-urlencoded",
+            }
+        );
     };
+
+    useEffect(() => {
+        if (fetcher.data) {
+            //@ts-ignore
+            if (fetcher.data.error) {
+                //@ts-ignore
+                setNotification({ type: "error", message: fetcher.data.error });
+            } else {
+                //@ts-ignore
+                setNotification({ type: "success", message: `Proposal saved successfully, ID: ${fetcher.data.id}` });
+            }
+        }
+    }, [fetcher.data]);
 
     return (
         <MainContainer>
+            {notification && (
+                <Notification
+                    type={notification.type}
+                    message={notification.message}
+                    onClose={() => setNotification(null)}
+                />
+            )}
+
             <Title>Prepared by</Title>
             <Description>Select the name of the creator of nthe proposal</Description>
             <FormContent>
@@ -339,7 +373,7 @@ export default function ProposalForm({ proposalData }: FormContentProps) {
                 />
             </FormContent>
             <br />
-            <Button onClick={onSubmit}>
+            <Button onClick={onSubmit} loading={isLoading}>
                 Generate
             </Button>
         </MainContainer>

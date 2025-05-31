@@ -6,6 +6,8 @@ import TextEditor from "./TextEditor";
 import Title from "../basics/Title";
 import Button from "../basics/Button";
 import MainContainer from "../containers/MainContainer";
+import Notification from "../basics/Notification";
+import { useFetcher } from "@remix-run/react";
 
 interface FormContentProps {
     templateData?: any;
@@ -14,6 +16,9 @@ interface FormContentProps {
 type TemplateKey = keyof ProposalI;
 
 export default function TemplateForm({ templateData }: FormContentProps) {
+    const fetcher = useFetcher();
+    const isLoading = fetcher.state !== "idle";
+    const [notification, setNotification] = useState<{ type: "success" | "error"; message: string } | null>(null);
     const [percentagesValid, setPercentagesValid] = useState(true);
     const [template, setTemplate] = useState({
         title: "",
@@ -120,12 +125,39 @@ export default function TemplateForm({ templateData }: FormContentProps) {
     };
 
     const onSubmit = () => {
-        const templateResult = JSON.stringify(template)
-        console.log(templateResult);
+        const TemplateResult = JSON.stringify(template);
+        console.log(TemplateResult);
+        fetcher.submit(
+            { template: TemplateResult },
+            {
+                method: "post",
+                action: "/api/templates",
+                encType: "application/x-www-form-urlencoded",
+            }
+        );
     };
+    useEffect(() => {
+        if (fetcher.data) {
+            //@ts-ignore
+            if (fetcher.data.error) {
+                //@ts-ignore
+                setNotification({ type: "error", message: fetcher.data.error });
+            } else {
+                //@ts-ignore
+                setNotification({ type: "success", message: `Template saved successfully, ID: ${fetcher.data.id}` });
+            }
+        }
+    }, [fetcher.data]);
 
     return (
         <MainContainer>
+            {notification && (
+                <Notification
+                    type={notification.type}
+                    message={notification.message}
+                    onClose={() => setNotification(null)}
+                />
+            )}
             <Title>Template name</Title>
             <FormContent singleColumn={true}>
                 <FormField
@@ -277,7 +309,7 @@ export default function TemplateForm({ templateData }: FormContentProps) {
                 />
             </FormContent>
             <br />
-            <Button onClick={onSubmit}>
+            <Button onClick={onSubmit} loading={isLoading}>
                 Generate
             </Button>
         </MainContainer>

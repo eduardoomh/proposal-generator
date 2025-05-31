@@ -6,6 +6,8 @@ import Title from "../basics/Title";
 import Button from "../basics/Button";
 import MainContainer from "../containers/MainContainer";
 import FormField from "./FormFields";
+import Notification from "../basics/Notification";
+import { useFetcher } from "@remix-run/react";
 
 interface FormContentProps {
     pdfData?: any;
@@ -14,6 +16,9 @@ interface FormContentProps {
 type PdfKey = keyof PDFContentI;
 
 export default function PdfContentForm({ pdfData }: FormContentProps) {
+    const fetcher = useFetcher();
+    const isLoading = fetcher.state !== "idle";
+    const [notification, setNotification] = useState<{ type: "success" | "error"; message: string } | null>(null);
     const [pdfContent, setPdfContent] = useState({
         id: "",
         title: "",
@@ -110,12 +115,40 @@ export default function PdfContentForm({ pdfData }: FormContentProps) {
     };
 
     const onSubmit = () => {
-        const pdfResult = JSON.stringify(pdfContent)
-        console.log(pdfResult);
+        const ContenteResult = JSON.stringify(pdfContent);
+        console.log(ContenteResult);
+        fetcher.submit(
+            { pdfContent: ContenteResult },
+            {
+                method: "post",
+                action: "/api/pdf-content",
+                encType: "application/x-www-form-urlencoded",
+            }
+        );
     };
+
+    useEffect(() => {
+        if (fetcher.data) {
+            //@ts-ignore
+            if (fetcher.data.error) {
+                //@ts-ignore
+                setNotification({ type: "error", message: fetcher.data.error });
+            } else {
+                //@ts-ignore
+                setNotification({ type: "success", message: `PDF Content saved successfully, ID: ${fetcher.data.id}` });
+            }
+        }
+    }, [fetcher.data]);
 
     return (
         <MainContainer>
+            {notification && (
+                <Notification
+                    type={notification.type}
+                    message={notification.message}
+                    onClose={() => setNotification(null)}
+                />
+            )}
             <Title>BASIC INFORMATION</Title>
             <Description>A title decription for PDF Template</Description>
             <FormContent>
@@ -230,7 +263,7 @@ export default function PdfContentForm({ pdfData }: FormContentProps) {
             </FormContent>
 
             <br />
-            <Button onClick={onSubmit}>
+            <Button onClick={onSubmit} loading={isLoading}>
                 Save Changes
             </Button>
         </MainContainer >

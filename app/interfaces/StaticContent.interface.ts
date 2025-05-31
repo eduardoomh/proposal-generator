@@ -27,4 +27,5 @@ interface PDFContentI{
     estimates: {
         text_1: string;
     };
+    created_at?: any;
 }

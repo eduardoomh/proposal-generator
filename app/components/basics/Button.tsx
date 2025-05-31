@@ -1,24 +1,23 @@
 // components/Button.tsx
 import { File } from "lucide-react";
-import { useState } from "react";
 import type { ButtonHTMLAttributes, ReactNode } from "react";
 
 type ButtonProps = {
   children: ReactNode;
   onClick?: () => void;
+  loading?: boolean;
 } & ButtonHTMLAttributes<HTMLButtonElement>;
 
-export default function Button({ children, onClick, className = "", ...rest }: ButtonProps) {
-  const [loading, setLoading] = useState(false);
-
-  const handleClick = async () => {
+export default function Button({
+  children,
+  onClick,
+  className = "",
+  loading = false,
+  ...rest
+}: ButtonProps) {
+  const handleClick = () => {
     if (loading) return;
-
-    setLoading(true);
-    setTimeout(() => {
-      onClick?.();
-      setLoading(false);
-    }, 2000);
+    onClick?.();
   };
 
   return (

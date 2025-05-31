@@ -2,18 +2,21 @@ import { useLoaderData } from "@remix-run/react";
 import type { LoaderFunction } from "@remix-run/node";
 import TitleBanner from "~/components/basics/TitleBanner";
 import ProposalForm from "~/components/forms/ProposalForm";
-import { templates } from "~/mocks/Templates";
 
 export const loader: LoaderFunction = async ({ params }) => {
-  const template = templates.find((p) => p.id === params.id);
-  if (!template) {
-    throw new Response("Not Found", { status: 404 });
+  const { id } = params;
+
+  const res = await fetch(`${process.env.API_BASE_URL}/api/templates/${id}`);
+
+  if (!res.ok) {
+    throw new Response("Proposal not found", { status: 404 });
   }
 
+  const template: TemplateI = await res.json();
   return {
     prepared_by: "Abraham Rios",
     choose_person: "",
-    company_information:{
+    company_information: {
       presented_to_name: "",
       company_name: "",
       email_address: ""

@@ -1,24 +1,30 @@
 import { useLoaderData } from "@remix-run/react";
 import type { LoaderFunction } from "@remix-run/node";
-import { proposals } from "~/mocks/Proposals";
 import TitleBanner from "~/components/basics/TitleBanner";
 import ProposalForm from "~/components/forms/ProposalForm";
 
 export const loader: LoaderFunction = async ({ params }) => {
-  const proposal = proposals.find((p) => p.id === params.id);
-  if (!proposal) {
-    throw new Response("Not Found", { status: 404 });
+  const { id } = params;
+
+  const res = await fetch(`${process.env.API_BASE_URL}/api/proposals/${id}`);
+
+  if (!res.ok) {
+    throw new Response("Proposal not found", { status: 404 });
   }
 
-  return proposal;
+  const proposal: ProposalI = await res.json();
+  return {
+    ...proposal,
+    choose_person: ""
+  };
 };
 
 export default function UseProposal() {
-  const proposal = useLoaderData<typeof loader>();
+  const proposal = useLoaderData<ProposalI>();
 
   return (
     <>
-      <TitleBanner>New Proposal</TitleBanner>
+      <TitleBanner>Edit Proposal</TitleBanner>
       <ProposalForm proposalData={proposal} />
     </>
   );
