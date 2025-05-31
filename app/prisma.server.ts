@@ -1,16 +1,14 @@
+import prismaModule from "@prisma/client";
+const PrismaClient = prismaModule.PrismaClient;
 
-// app/prisma.server.ts
-
-import { PrismaClient } from "@prisma/client";
-
-
-let prisma: PrismaClient;
+let prisma: InstanceType<typeof PrismaClient>;
 
 declare global {
-  var __prisma: PrismaClient | undefined;
+  // Para evitar múltiples instancias en desarrollo
+  var __prisma: InstanceType<typeof PrismaClient> | undefined;
 }
 
-if (process.env.NODE_ENV === 'production') {
+if (process.env.NODE_ENV === "production") {
   prisma = new PrismaClient();
 } else {
   if (!global.__prisma) {
