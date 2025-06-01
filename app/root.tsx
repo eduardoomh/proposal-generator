@@ -11,6 +11,7 @@ import 'react-quill/dist/quill.snow.css';
 
 import "./tailwind.css";
 import { DesktopLayout } from "./layout/DesktopMenu";
+import GlobalLoadingIndicator from "./components/GlobalLoadingIndicator";
 
 export const links: LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },

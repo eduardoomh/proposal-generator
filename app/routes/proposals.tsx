@@ -1,10 +1,11 @@
+import { useEffect, useState } from "react";
 import type { LoaderFunction, MetaFunction } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 
 import MainContainer from "~/components/containers/MainContainer";
 import ProposalsTable from "~/components/tables/ProposalsTable";
 import TitleBanner from "~/components/basics/TitleBanner";
-import { useState } from "react";
+import SkeletonProposals from "~/components/skeletons/SkeletonProposals";
 
 export const meta: MetaFunction = () => {
   return [
@@ -25,18 +26,28 @@ export const loader: LoaderFunction = async () => {
 
 export default function Proposals() {
   const loaderData = useLoaderData<ProposalI[]>();
-  const [proposals, setProposals] = useState(loaderData);
+  const [proposals, setProposals] = useState<ProposalI[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    setProposals(loaderData);
+    setLoading(false); // Se oculta el skeleton después de montar
+  }, [loaderData]);
 
   const handleDelete = (id: string) => {
     setProposals((prev) => prev.filter((t) => t.id !== id));
-  }
+  };
 
   return (
     <div>
       <TitleBanner>List of proposals</TitleBanner>
 
       <MainContainer>
-        <ProposalsTable proposals={proposals} onDelete={handleDelete} />
+        {loading ? (
+          <SkeletonProposals />
+        ) : (
+          <ProposalsTable proposals={proposals} onDelete={handleDelete} />
+        )}
       </MainContainer>
     </div>
   );
