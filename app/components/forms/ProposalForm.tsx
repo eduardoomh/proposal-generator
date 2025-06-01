@@ -9,6 +9,7 @@ import MainContainer from "../containers/MainContainer";
 import Notification from "../basics/Notification";
 import { useFetcher } from "@remix-run/react";
 import { handleDownloadPDF } from "~/utils/PdfGenerator";
+import { getLanguageLabel } from "~/utils/General";
 
 interface FormContentProps {
     proposalData?: any;
@@ -168,6 +169,7 @@ export default function ProposalForm({ proposalData }: FormContentProps) {
 
                 fetch(`/api/pdf-content/language/${language}`)
                     .then(res => {
+                        console.log("res", res)
                         if (!res.ok) throw new Error("Failed to fetch PDF content");
                         return res.json();
                     })
@@ -179,7 +181,7 @@ export default function ProposalForm({ proposalData }: FormContentProps) {
                     })
                     .catch(err => {
                         console.error("Error fetching PDF content:", err);
-                        setNotification({ type: "error", message: "Proposal saved, but PDF content failed to load." });
+                        setNotification({ type: "error", message: `Proposal saved, but PDF content in ${getLanguageLabel(language as 'es'| 'en')} it may not exist.` });
                     });
             }
         }

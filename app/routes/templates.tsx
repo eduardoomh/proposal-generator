@@ -1,9 +1,13 @@
+import { Suspense, useEffect, useState } from "react";
 import type { LoaderFunction, MetaFunction } from "@remix-run/node";
+import { defer, Await, useLoaderData } from "@remix-run/react";
+
 import MainContainer from "~/components/containers/MainContainer";
 import TemplateTable from "~/components/tables/TemplateTable";
 import TitleBanner from "~/components/basics/TitleBanner";
-import { useFetcher, useLoaderData } from "@remix-run/react";
-import { useState } from "react";
+import { delay } from "~/utils/General";
+import SkeletonTemplates from "~/components/skeletons/SkeletonTemplates";
+
 
 export const meta: MetaFunction = () => {
   return [
@@ -13,30 +17,47 @@ export const meta: MetaFunction = () => {
 };
 
 export const loader: LoaderFunction = async () => {
-  const res = await fetch(`${process.env.API_BASE_URL}/api/templates`);
-  const templates: TemplateI[] = await res.json();
+  const templatesPromise = fetch(`${process.env.API_BASE_URL}/api/templates`)
+    .then((res) => res.json())
+    .then((data) => delay(500, data)); // espera mínimo 0.5s
 
-  return new Response(JSON.stringify(templates), {
-    status: 200,
-    headers: { "Content-Type": "application/json" },
+  return defer({
+    templates: templatesPromise,
   });
 };
 
 export default function TemplateList() {
-  const loaderData = useLoaderData<TemplateI[]>();
-  const [templates, setTemplates] = useState(loaderData);
+  const { templates } = useLoaderData<typeof loader>();
+  const [localTemplates, setLocalTemplates] = useState<TemplateI[] | null>(null);
 
   const handleDelete = (id: string) => {
-    // Opcionalmente elimina localmente
-    setTemplates((prev) => prev.filter((t) => t.id !== id));
+    setLocalTemplates((prev: any) => prev.filter((t: any) => t.id !== id));
   };
 
   return (
     <div>
-      <TitleBanner showButton buttonLabel="Create New" buttonUrl="/new/template">Templates</TitleBanner>
+      <TitleBanner showButton buttonLabel="Create New" buttonUrl="/new/template">
+        Templates
+      </TitleBanner>
 
       <MainContainer>
-        <TemplateTable templates={templates} onDelete={handleDelete} />
+        <Suspense fallback={<SkeletonTemplates />}>
+          <Await resolve={templates}>
+            {(resolvedTemplates: TemplateI[]) => {
+
+              useEffect(() => {
+                setLocalTemplates(resolvedTemplates);
+              }, []);
+
+              return (
+                <TemplateTable
+                  templates={localTemplates ?? resolvedTemplates}
+                  onDelete={handleDelete}
+                />
+              )
+            }}
+          </Await>
+        </Suspense>
       </MainContainer>
     </div>
   );

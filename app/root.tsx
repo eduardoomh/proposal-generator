@@ -1,10 +1,10 @@
+// app/root.tsx
 import {
-  Link,
   Links,
   Meta,
   Outlet,
   Scripts,
-  ScrollRestoration,
+  ScrollRestoration
 } from "@remix-run/react";
 import type { LinksFunction } from "@remix-run/node";
 import 'react-quill/dist/quill.snow.css';
@@ -30,8 +30,8 @@ export const links: LinksFunction = () => [
   },
 ];
 
-
 export function Layout({ children }: { children: React.ReactNode }) {
+
   return (
     <html lang="en" className="font-inter">
       <head>

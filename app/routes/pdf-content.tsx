@@ -1,41 +1,62 @@
+import { Suspense, useState, useEffect } from "react";
 import type { LoaderFunction, MetaFunction } from "@remix-run/node";
+import { defer, Await, useLoaderData } from "@remix-run/react";
+
 import MainContainer from "~/components/containers/MainContainer";
 import TitleBanner from "~/components/basics/TitleBanner";
 import PDFContentTable from "~/components/tables/PDFContentTable";
-import { useLoaderData } from "@remix-run/react";
-import { useState } from "react";
+import { delay } from "~/utils/General";
+import SkeletonPdfContent from "~/components/skeletons/SkeletonPdfContent";
 
 export const meta: MetaFunction = () => {
   return [
     { title: "IpInsights - Proposals Generator" },
-    { name: "description", content: "Templates list" },
+    { name: "description", content: "PDF Content list" },
   ];
 };
 
 export const loader: LoaderFunction = async () => {
-  const res = await fetch(`${process.env.API_BASE_URL}/api/pdf-content`);
-  const pdfContent: PDFContentI[] = await res.json();
+  const pdfContentPromise = fetch(`${process.env.API_BASE_URL}/api/pdf-content`)
+    .then((res) => res.json())
+    .then((data) => delay(500, data)); // delay para evitar parpadeo
 
-  return new Response(JSON.stringify(pdfContent), {
-    status: 200,
-    headers: { "Content-Type": "application/json" },
+  return defer({
+    pdfContent: pdfContentPromise,
   });
 };
 
 export default function StaticContent() {
-  const loaderData = useLoaderData<PDFContentI[]>();
-  const [contents, setContents] = useState(loaderData);
+  const { pdfContent } = useLoaderData<typeof loader>();
+  const [localContents, setLocalContents] = useState<PDFContentI[] | null>(null);
+
 
   const handleDelete = (id: string) => {
-    setContents((prev) => prev.filter((t) => t.id !== id));
+    setLocalContents((prev: any) => prev.filter((t: any) => t.id !== id));
   };
 
   return (
     <div>
-      <TitleBanner showButton buttonLabel="Create New" buttonUrl="/new/pdf-content">PDF Content</TitleBanner>
+      <TitleBanner showButton buttonLabel="Create New" buttonUrl="/new/pdf-content">
+        PDF Content
+      </TitleBanner>
 
       <MainContainer>
-        <PDFContentTable contents={contents} onDelete={handleDelete} />
+        <Suspense fallback={<SkeletonPdfContent />}>
+          <Await resolve={pdfContent}>
+            {(resolvePdfContent: PDFContentI[]) => {
+              useEffect(() => {
+                setLocalContents(resolvePdfContent);
+              }, []);
+
+              return (
+                <PDFContentTable
+                  contents={localContents ?? resolvePdfContent}
+                  onDelete={handleDelete}
+                />
+              )
+            }}
+          </Await>
+        </Suspense>
       </MainContainer>
     </div>
   );
