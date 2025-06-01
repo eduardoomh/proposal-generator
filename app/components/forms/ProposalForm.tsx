@@ -8,6 +8,7 @@ import Button from "../basics/Button";
 import MainContainer from "../containers/MainContainer";
 import Notification from "../basics/Notification";
 import { useFetcher } from "@remix-run/react";
+import { handleDownloadPDF } from "~/utils/PdfGenerator";
 
 interface FormContentProps {
     proposalData?: any;
@@ -163,8 +164,23 @@ export default function ProposalForm({ proposalData }: FormContentProps) {
                 //@ts-ignore
                 setNotification({ type: "error", message: fetcher.data.error });
             } else {
-                //@ts-ignore
-                setNotification({ type: "success", message: `Proposal saved successfully, ID: ${fetcher.data.id}` });
+                const language = proposal.project_details.language;
+
+                fetch(`/api/pdf-content/language/${language}`)
+                    .then(res => {
+                        if (!res.ok) throw new Error("Failed to fetch PDF content");
+                        return res.json();
+                    })
+                    .then(data => {
+                        console.log("PDF Content:", data);
+                        handleDownloadPDF(proposal as ProposalI, data)
+                        //@ts-ignore
+                        setNotification({ type: "success", message: `Proposal saved successfully, ID: ${fetcher.data.id}` });
+                    })
+                    .catch(err => {
+                        console.error("Error fetching PDF content:", err);
+                        setNotification({ type: "error", message: "Proposal saved, but PDF content failed to load." });
+                    });
             }
         }
     }, [fetcher.data]);
