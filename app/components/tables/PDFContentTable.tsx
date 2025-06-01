@@ -70,20 +70,22 @@ export default function PDFContentTable({
               <tr key={item.id} className="border-t hover:bg-gray-50">
                 <td className="px-4 py-4 capitalize">{item.title}</td>
                 <td className="px-4 py-4 capitalize">{getLanguageLabel(item.language)}</td>
-                <td className="px-4 py-4 flex items-center gap-4">
-                  <Link
-                    to={`/pdf/edit/${item.id}`}
-                    className="text-blue-600 hover:underline"
-                  >
-                    Edit
-                  </Link>
-                  <button
-                    onClick={() => handleDelete(item.id)}
-                    className="text-black hover:text-red-700 transition-colors"
-                    title="Delete content"
-                  >
-                    <Trash2 className="w-5 h-5" />
-                  </button>
+                <td className="px-4 py-4">
+                  <p className="flex gap-4">
+                    <Link
+                      to={`/pdf/edit/${item.id}`}
+                      className="text-blue-600 hover:underline"
+                    >
+                      Edit
+                    </Link>
+                    <button
+                      onClick={() => handleDelete(item.id)}
+                      className="text-black hover:text-red-700 transition-colors"
+                      title="Delete content"
+                    >
+                      <Trash2 className="w-5 h-5" />
+                    </button>
+                  </p>
                 </td>
               </tr>
             ))

@@ -11,11 +11,12 @@ import { useFetcher } from "@remix-run/react";
 
 interface FormContentProps {
     pdfData?: any;
+    edit?: boolean;
 }
 
 type PdfKey = keyof PDFContentI;
 
-export default function PdfContentForm({ pdfData }: FormContentProps) {
+export default function PdfContentForm({ pdfData, edit }: FormContentProps) {
     const fetcher = useFetcher();
     const isLoading = fetcher.state !== "idle";
     const [notification, setNotification] = useState<{ type: "success" | "error"; message: string } | null>(null);
@@ -115,16 +116,30 @@ export default function PdfContentForm({ pdfData }: FormContentProps) {
     };
 
     const onSubmit = () => {
-        const ContenteResult = JSON.stringify(pdfContent);
-        console.log(ContenteResult);
-        fetcher.submit(
-            { pdfContent: ContenteResult },
-            {
-                method: "post",
-                action: "/api/pdf-content",
-                encType: "application/x-www-form-urlencoded",
-            }
-        );
+        const contentResult = JSON.stringify(pdfContent);
+        console.log(contentResult);
+
+        const id = pdfContent.id;
+
+        if (edit && id) {
+            fetcher.submit(
+                { pdfContent: contentResult },
+                {
+                    method: "put",
+                    action: `/api/pdf-content/${id}`,
+                    encType: "application/x-www-form-urlencoded",
+                }
+            );
+        } else {
+            fetcher.submit(
+                { pdfContent: contentResult },
+                {
+                    method: "post",
+                    action: "/api/pdf-content",
+                    encType: "application/x-www-form-urlencoded",
+                }
+            );
+        }
     };
 
     useEffect(() => {
@@ -135,7 +150,7 @@ export default function PdfContentForm({ pdfData }: FormContentProps) {
                 setNotification({ type: "error", message: fetcher.data.error });
             } else {
                 //@ts-ignore
-                setNotification({ type: "success", message: `PDF Content saved successfully, ID: ${fetcher.data.id}` });
+                setNotification({ type: "success", message: `PDF Content ${edit ? 'edited' : 'saved'} successfully, ID: ${fetcher.data.id}` });
             }
         }
     }, [fetcher.data]);
@@ -151,7 +166,7 @@ export default function PdfContentForm({ pdfData }: FormContentProps) {
             )}
             <Title>BASIC INFORMATION</Title>
             <Description>A title decription for PDF Template</Description>
-            <FormContent>
+            <FormContent singleColumn={true}>
                 <FormField
                     label="Template title"
                     name="title"
@@ -264,7 +279,7 @@ export default function PdfContentForm({ pdfData }: FormContentProps) {
 
             <br />
             <Button onClick={onSubmit} loading={isLoading}>
-                Save Changes
+                {edit ? 'Update' : 'Save'} Changes
             </Button>
         </MainContainer >
     );

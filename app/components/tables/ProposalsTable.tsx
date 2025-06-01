@@ -91,20 +91,23 @@ export default function ProposalTable({
                 <td className="px-4 py-4">
                   ${proposal.estimates.estimated_cost.toLocaleString()}
                 </td>
-                <td className="px-4 py-4 flex items-center gap-4">
-                  <Link
-                    to={`/proposal/${proposal.id}`}
-                    className="text-blue-600 hover:underline"
-                  >
-                    Use
-                  </Link>
-                  <button
-                    onClick={() => handleDelete(proposal.id)}
-                    className="text-black hover:text-red-700 transition-colors"
-                    title="Delete proposal"
-                  >
-                    <Trash2 className="w-5 h-5" />
-                  </button>
+                <td className="px-4 py-4">
+                  <p className="flex gap-4">
+                    <Link
+                      to={`/proposal/${proposal.id}`}
+                      className="text-blue-600 hover:underline"
+                    >
+                      Use
+                    </Link>
+                    <button
+                      onClick={() => handleDelete(proposal.id)}
+                      className="text-black hover:text-red-700 transition-colors"
+                      title="Delete proposal"
+                    >
+                      <Trash2 className="w-5 h-5" />
+                    </button>
+                  </p>
+
                 </td>
               </tr>
             ))

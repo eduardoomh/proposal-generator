@@ -75,24 +75,27 @@ export default function TemplateTable({
                   </td>
                   <td className="px-4 py-4">
                     {template.resource_estimates.engineering_percentage} / {template.resource_estimates.architecture_percentage} / {template.resource_estimates.sr_architecture_percentage}
-                    </td>
+                  </td>
                   <td className="px-4 py-4 capitalize">
                     {getLanguageLabel(template.project_details.language)}
                   </td>
-                  <td className="px-4 py-4 flex items-center gap-4">
-                    <Link
-                      to={`/template/${template.id}`}
-                      className="text-blue-600 hover:underline"
-                    >
-                      Use
-                    </Link>
-                    <button
-                      onClick={() => handleDelete(template.id)}
-                      className="text-black hover:text-red-700 transition-colors"
-                      title="Delete template"
-                    >
-                      <Trash2 className="w-5 h-5" />
-                    </button>
+                  <td className="px-4 py-4">
+                    <p className="flex gap-4">
+                      <Link
+                        to={`/template/${template.id}`}
+                        className="text-blue-600 hover:underline"
+                      >
+                        Use
+                      </Link>
+                      <button
+                        onClick={() => handleDelete(template.id)}
+                        className="text-black hover:text-red-700 transition-colors"
+                        title="Delete template"
+                      >
+                        <Trash2 className="w-5 h-5" />
+                      </button>
+                    </p>
+
                   </td>
                 </tr>
               );

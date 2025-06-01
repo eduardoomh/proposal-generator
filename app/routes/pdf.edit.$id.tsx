@@ -2,15 +2,18 @@ import { useLoaderData } from "@remix-run/react";
 import type { LoaderFunction } from "@remix-run/node";
 import TitleBanner from "~/components/basics/TitleBanner";
 import PdfContentForm from "~/components/forms/PdfForm";
-import { pdfContent } from "~/mocks/PdfContent";
 
 export const loader: LoaderFunction = async ({ params }) => {
-  const content = pdfContent.find((p) => p.id === params.id);
-  if (!content) {
-    throw new Response("Not Found", { status: 404 });
+  const { id } = params;
+
+  const res = await fetch(`${process.env.API_BASE_URL}/api/pdf-content/${id}`);
+
+  if (!res.ok) {
+    throw new Response("PDF Content not found", { status: 404 });
   }
 
-  return content;
+  const pdfContent: PDFContentI = await res.json();
+  return pdfContent
 };
 
 export default function UseProposal() {
@@ -19,7 +22,7 @@ export default function UseProposal() {
   return (
     <>
       <TitleBanner>Edit PDF Content</TitleBanner>
-      <PdfContentForm pdfData={content} />
+      <PdfContentForm pdfData={content} edit={true} />
      
     </>
   );

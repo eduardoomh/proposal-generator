@@ -1,6 +1,6 @@
 import type { LoaderFunction, ActionFunction } from "@remix-run/node";
 import { prisma } from "~/prisma.server";
-import { formatPrismaToPDFContent } from "~/utils/PdfContent";
+import { formatPDFContentForPrisma, formatPrismaToPDFContent } from "~/utils/PdfContent";
 
 // GET: Obtener contenido por ID
 export const loader: LoaderFunction = async ({ params }) => {
@@ -30,14 +30,10 @@ export const loader: LoaderFunction = async ({ params }) => {
   });
 };
 
-// DELETE: Eliminar PDFContent por ID
+// DELETE o PUT: Eliminar o Editar PDFContent por ID
 export const action: ActionFunction = async ({ request, params }) => {
-  if (request.method !== "DELETE") {
-    return new Response("Method Not Allowed", { status: 405 });
-  }
-
   const { id } = params;
-
+console.log("esta funcionando????")
   if (!id) {
     return new Response(JSON.stringify({ error: "Missing ID" }), {
       status: 400,
@@ -45,17 +41,55 @@ export const action: ActionFunction = async ({ request, params }) => {
     });
   }
 
-  try {
-    await prisma.pDFContent.delete({ where: { id } });
+  if (request.method === "DELETE") {
+    try {
+      await prisma.pDFContent.delete({ where: { id } });
 
-    return new Response(JSON.stringify({ success: true }), {
-      status: 200,
-      headers: { "Content-Type": "application/json" },
-    });
-  } catch (error) {
-    return new Response(JSON.stringify({ error: "Delete failed" }), {
-      status: 500,
-      headers: { "Content-Type": "application/json" },
-    });
+      return new Response(JSON.stringify({ success: true }), {
+        status: 200,
+        headers: { "Content-Type": "application/json" },
+      });
+    } catch {
+      return new Response(JSON.stringify({ error: "Delete failed" }), {
+        status: 500,
+        headers: { "Content-Type": "application/json" },
+      });
+    }
   }
+
+  if (request.method === "PUT") {
+    try {
+      const formData = await request.formData();
+      const contentJson = formData.get("pdfContent") as string;
+
+      if (!contentJson) {
+        return new Response(JSON.stringify({ error: "No PDF content data" }), {
+          status: 400,
+          headers: { "Content-Type": "application/json" },
+        });
+      }
+
+      const content = JSON.parse(contentJson);
+      const prismaData = formatPDFContentForPrisma(content);
+
+
+      const updatedContent = await prisma.pDFContent.update({
+        where: { id },
+        data: prismaData,
+      });
+
+      return new Response(JSON.stringify(updatedContent), {
+        status: 200,
+        headers: { "Content-Type": "application/json" },
+      });
+    } catch(error: any) {
+      console.log(error, "vemos")
+      return new Response(JSON.stringify({ error: "Update failed" }), {
+        status: 500,
+        headers: { "Content-Type": "application/json" },
+      });
+    }
+  }
+
+  return new Response("Method Not Allowed", { status: 405 });
 };
