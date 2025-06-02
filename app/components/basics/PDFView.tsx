@@ -1,10 +1,27 @@
 
-import { Document, Page, Text, Image, View } from '@react-pdf/renderer'
-import { pdfContent } from '../../mocks/PdfContent';
+import { Document, Page, Text, Image, View, StyleSheet } from '@react-pdf/renderer'
+import { extractParagraphsFromHTML } from '~/utils/PdfContent';
 
 const styles = {
     page: {
-
+        padding: '16px 24px'
+    },
+    viewContainer: {
+        margin: '12px 0'
+    },
+    short_text: {
+        fontSize: '12px',
+        color: 'gray',
+    },
+    general_text: {
+        fontSize: '12px',
+        color: 'black',
+        marginBottom: '4px'
+    },
+    section_title: {
+        color: '#00abff',
+        fontSize: '16px',
+        marginBottom: '4px'
     },
     headerContainer: {
 
@@ -30,16 +47,20 @@ export default function PDFView(props: Props) {
             <Page size="A4" style={styles.page}>
                 <View style={styles.headerContainer}>
                     <Image
-                        src="https://i.imgur.com/Mvwysfh.png"
+                        src="/IP-insight-Support-Banner.png"
                         style={styles.logo}
                     />
                 </View>
-                <View>
-                    <Text>{content.general.text_1}</Text>
+                <View style={styles.viewContainer}>
+                    {extractParagraphsFromHTML(content.general.text_1).map((para: any, idx: any) => (
+                        <Text key={idx} style={styles.short_text}>
+                            {para}
+                        </Text>
+                    ))}
                 </View>
 
-                <View style={styles.headerContainer}>
-                    <Text style={styles.headerText}>Summary</Text>
+                <View style={styles.viewContainer}>
+                    <Text style={styles.section_title}>Summary</Text>
                     <View>
                         <Text style={styles.headerText}>Presented To: </Text>
                         <Text style={styles.headerText}>Presented On: </Text>
@@ -54,21 +75,33 @@ export default function PDFView(props: Props) {
                     </View>
                 </View>
 
-                <View>
+                <View style={styles.viewContainer}>
                     <View>
-                        <Text>Project Description</Text>
-                        <Text>{proposal.project_details.description}</Text>
+                        <Text style={styles.section_title}>Project Description</Text>
+                        {extractParagraphsFromHTML(proposal.project_details.description).map((para: any, idx: any) => (
+                            <Text key={idx} style={styles.general_text}>
+                                {para}
+                            </Text>
+                        ))}
                     </View>
                     <View>
-                        <Text>Deliverables</Text>
-                        <Text>{proposal.project_details.deliverables}</Text>
+                        <Text style={styles.section_title}>Deliverables</Text>
+                        {extractParagraphsFromHTML(proposal.project_details.deliverables).map((para: any, idx: any) => (
+                            <Text key={idx} style={styles.general_text}>
+                                {para}
+                            </Text>
+                        ))}
                     </View>
                 </View>
 
-                <View>
-                    <Text>Who Will Work On This Project</Text>
+                <View style={styles.viewContainer}>
+                    <Text style={styles.section_title}>Who Will Work On This Project</Text>
                     <View>
-                        <Text>{content.who_will_work.text_1}</Text>
+                        {extractParagraphsFromHTML(content.who_will_work.text_1).map((para: any, idx: any) => (
+                            <Text key={idx} style={styles.general_text}>
+                                {para}
+                            </Text>
+                        ))}
                     </View>
                     <View>
                         <Text>Senior Architech {proposal.resource_estimates.sr_architecture_percentage}</Text>
@@ -77,32 +110,64 @@ export default function PDFView(props: Props) {
                     </View>
                 </View>
 
-                <View>
-                    <Text>How We Get Started</Text>
-                    <Text>{content.how_we_get_started.text_1}</Text>
+                <View style={styles.viewContainer}>
+                    <Text style={styles.section_title}>How We Get Started</Text>
+                    {extractParagraphsFromHTML(content.how_we_get_started.text_1).map((para: any, idx: any) => (
+                        <Text key={idx} style={styles.general_text}>
+                            {para}
+                        </Text>
+                    ))}
                 </View>
 
-                <View>
-                    <Text>How You Are Billed</Text>
-                    <Text>{content.how_you_are_billed.text_1}</Text>
-                    <Text>{content.how_you_are_billed.alert}</Text>
-                    <Text>{content.how_you_are_billed.text_2}</Text>
+                <View style={styles.viewContainer}>
+                    <Text style={styles.section_title}>How You Are Billed</Text>
+                    {extractParagraphsFromHTML(content.how_you_are_billed.text_1).map((para: any, idx: any) => (
+                        <Text key={idx} style={styles.general_text}>
+                            {para}
+                        </Text>
+                    ))}
+                    {extractParagraphsFromHTML(content.how_you_are_billed.alert).map((para: any, idx: any) => (
+                        <Text key={idx} style={styles.general_text}>
+                            {para}
+                        </Text>
+                    ))}
+                    {extractParagraphsFromHTML(content.how_you_are_billed.text_2).map((para: any, idx: any) => (
+                        <Text key={idx} style={styles.general_text}>
+                            {para}
+                        </Text>
+                    ))}
                 </View>
 
-                <View>
-                    <Text>How We Keep Going</Text>
-                    <Text>{content.how_we_keep_going.text_1}</Text>
-                    <Text>{content.how_we_keep_going.alert}</Text>
+                <View style={styles.viewContainer}>
+                    <Text style={styles.section_title}>How We Keep Going</Text>
+                    {extractParagraphsFromHTML(content.how_we_keep_going.text_1).map((para: any, idx: any) => (
+                        <Text key={idx} style={styles.general_text}>
+                            {para}
+                        </Text>
+                    ))}
+                    {extractParagraphsFromHTML(content.how_we_keep_going.alert).map((para: any, idx: any) => (
+                        <Text key={idx} style={styles.general_text}>
+                            {para}
+                        </Text>
+                    ))}
                 </View>
 
-                <View>
-                    <Text>Availability and SLA</Text>
-                    <Text>{content.availability_and_sla.text_1}</Text>
+                <View style={styles.viewContainer}>
+                    <Text style={styles.section_title}>Availability and SLA</Text>
+                    {extractParagraphsFromHTML(content.availability_and_sla.text_1).map((para: any, idx: any) => (
+                        <Text key={idx} style={styles.general_text}>
+                            {para}
+                        </Text>
+                    ))}
                 </View>
 
-                <View>
-                    <Text>Estimates</Text>
-                    <Text>{content.estimates.text_1}</Text>
+                <View style={styles.viewContainer}>
+                    <Text style={styles.section_title}>Estimates</Text>
+                    {extractParagraphsFromHTML(content.estimates.text_1).map((para: any, idx: any) => (
+                        <Text key={idx} style={styles.general_text}>
+                            {para}
+                        </Text>
+                    ))}
                 </View>
             </Page>
         </Document>

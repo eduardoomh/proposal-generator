@@ -56,3 +56,22 @@ export function formatPrismaToPDFContent(prismaContent: any): PDFContentI {
     created_at: prismaContent.createdAt,
   };
 }
+
+export function extractParagraphsFromHTML(html: string): string[] {
+  const regex = /<p[^>]*>(.*?)<\/p>/gi;
+  const paragraphs: string[] = [];
+  let match;
+
+  while ((match = regex.exec(html)) !== null) {
+    const cleanText = match[1]
+      .replace(/<br\s*\/?>/gi, '\n') // reemplaza <br> por saltos de línea
+      .replace(/<\/?[^>]+(>|$)/g, '') // elimina cualquier otra etiqueta HTML
+      .trim();
+
+    if (cleanText) {
+      paragraphs.push(cleanText + '\n'); // <- salto de línea adicional entre párrafos
+    }
+  }
+
+  return paragraphs;
+}

@@ -222,8 +222,8 @@ export default function PdfContentForm({ pdfData, edit }: FormContentProps) {
             <Description>Alert Paragraph</Description>
             <FormContent singleColumn={true}>
                 <TextEditor
-                    value={pdfContent.how_we_keep_going.alert}
-                    onChange={(val) => onTextEditorChange('how_we_keep_going', 'alert', val)}
+                    value={pdfContent.how_you_are_billed.alert}
+                    onChange={(val) => onTextEditorChange('how_you_are_billed', 'alert', val)}
                 />
             </FormContent>
             <br />
