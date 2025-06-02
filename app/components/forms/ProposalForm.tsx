@@ -207,7 +207,7 @@ export default function ProposalForm({ proposalData }: FormContentProps) {
                     value={proposal.choose_person}
                     options={[
                         { value: "Abraham Ríos", label: "Abraham Ríos" },
-                        { value: "Robert Riera", label: "Roberr Riera" },
+                        { value: "Robert Riera", label: "Robert Riera" },
                         { value: "Jorge Fernandez", label: "Jorge Fernandez" },
                     ]}
                     onChange={(e: any) => onSelectChange('', 'choose_person', e)}
