@@ -2,12 +2,12 @@ import { Document, Page, View, Text, Image } from "@react-pdf/renderer";
 import { registerMontserratFonts } from "~/utils/Fonts"
 import { styles } from "./styles"
 import { extractFormattedContentFromHTMLv2 } from "~/utils/PdfUtils";
-import RowItem from "./Rowitem";
 import { formatDate } from "./utils";
 import PercentageBar from "./PercentageBar";
 import TableRow from "./TableRow";
 import { extractParagraphsFromHTML } from "~/utils/PdfContent";
 import { texts } from "./Language";
+import RowItem from "./Rowitem";
 
 interface Props {
     proposal: ProposalI
