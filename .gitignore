@@ -7,4 +7,6 @@ node_modules
 
 /generated/prisma
 
-/public/fornts/montserrat
+/public/fonts/
+/public/fonts/montserrat
+
