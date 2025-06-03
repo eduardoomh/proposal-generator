@@ -177,7 +177,7 @@ export default function PDFView(props: Props) {
             <Page size="A4" style={styles.page}>
                 <View style={styles.headerContainer}>
                     <Image
-                        src="/IP-insight-Support-Banner.png"
+                        src="/IP-insight-support-banner.webp"
                         style={styles.logo}
                     />
                 </View>
