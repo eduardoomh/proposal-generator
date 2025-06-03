@@ -5,6 +5,7 @@ import { registerMontserratFonts } from '~/utils/Fonts';
 import { extractParagraphsFromHTML } from '~/utils/PdfContent';
 import { extractFormattedContentFromHTMLv2 } from '~/utils/PdfUtils';
 
+//styles
 export const styles = StyleSheet.create({
     page: {
         padding: '16px 24px',
