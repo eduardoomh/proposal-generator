@@ -107,6 +107,7 @@ export const styles = StyleSheet.create({
         fontWeight: '500'
     },
     table: {
+        //@ts-ignore
         display: "table",
         width: "auto",
         marginVertical: 10,
