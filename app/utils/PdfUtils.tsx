@@ -1,5 +1,5 @@
 import { Text, View } from "@react-pdf/renderer";
-import { styles } from "../components/basics/PDFView";
+import { styles } from "~/components/PDF/styles";
 
 interface TemplateVariables {
   company_name?: string;

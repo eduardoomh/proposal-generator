@@ -1,6 +1,6 @@
 // utils/pdfHelpers.tsx
 import { pdf } from "@react-pdf/renderer";
-import PDFView from '../components/basics/PDFView';
+import PDFView from "~/components/PDF/PDFView";
 
 export const handleDownloadPDF = async (proposal: ProposalI, content: PDFContentI) => {
   const blob = await pdf(
