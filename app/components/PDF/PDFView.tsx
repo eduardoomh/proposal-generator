@@ -7,7 +7,7 @@ import PercentageBar from "./PercentageBar";
 import TableRow from "./TableRow";
 import { extractParagraphsFromHTML } from "~/utils/PdfContent";
 import { texts } from "./Language";
-import RowItem from "./Rowitem";
+import RowItemV2 from "./RowItemV2";
 
 interface Props {
     proposal: ProposalI
@@ -50,16 +50,16 @@ export default function PDFView({ proposal, content }: Props) {
                     <Text style={styles.section_title_2}>{t.summary}</Text>
                     <View style={styles.container_2}>
                         <View style={styles.column}>
-                            <RowItem label={t.presentedTo} value={proposal.company_information.presented_to_name} />
-                            <RowItem label={t.presentedOn} value={formatDate(proposal.created_at)} />
-                            <RowItem label={t.preparedBy} value={proposal.prepared_by} />
-                            <RowItem label={t.validThrough} value={formatDate(proposal.created_at, 1)} />
+                            <RowItemV2 label={t.presentedTo} value={proposal.company_information.presented_to_name} />
+                            <RowItemV2 label={t.presentedOn} value={formatDate(proposal.created_at)} />
+                            <RowItemV2 label={t.preparedBy} value={proposal.prepared_by} />
+                            <RowItemV2 label={t.validThrough} value={formatDate(proposal.created_at, 1)} />
                         </View>
                         <View style={styles.column}>
-                            <RowItem label={t.initialInvoice} value={`$${proposal.invoicing_details.initial_invoice_amount}`} />
-                            <RowItem label={t.minimumRetainer} value={`$${proposal.invoicing_details.minimum_retainer_amount}`} />
-                            <RowItem label={t.projectEstimate} value={`$${proposal.estimates.estimated_cost}`} />
-                            <RowItem label={t.estimatedHours} value={`${proposal.estimates.estimated_hours} Hours`} />
+                            <RowItemV2 label={t.initialInvoice} value={`$${proposal.invoicing_details.initial_invoice_amount}`} />
+                            <RowItemV2 label={t.minimumRetainer} value={`$${proposal.invoicing_details.minimum_retainer_amount}`} />
+                            <RowItemV2 label={t.projectEstimate} value={`$${proposal.estimates.estimated_cost}`} />
+                            <RowItemV2 label={t.estimatedHours} value={`${proposal.estimates.estimated_hours} Hours`} />
                         </View>
                     </View>
                 </View>
