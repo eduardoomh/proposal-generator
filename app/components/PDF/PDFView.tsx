@@ -117,8 +117,8 @@ export default function PDFView({ proposal, content }: Props) {
                         <TableRow
                             cells={[
                                 t.afterHours,
-                                '1.5x Resource Rate (4 Hour Minimum)',
-                                '1.5x Resource Rate (4 Hour Minimum)',
+                                t.resourceRate,
+                                t.resourceRate,
                             ]}
                         />
                     </View>
