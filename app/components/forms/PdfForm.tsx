@@ -68,12 +68,13 @@ export default function PdfContentForm({ pdfData, edit }: FormContentProps) {
     }
 
     const onChange = (key: string, e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-        const { name, value } = e.target;
-        console.log(key, name, value)
+        const { name, value, type } = e.target;
+
+        let formattedValue = type === 'number' ? Number(value) : value
         if (key === '') {
             setPdfContent((prev) => ({
                 ...prev,
-                [name]: value
+                [name]: formattedValue
             }));
         } else {
             setPdfContent((prev) => ({
@@ -81,7 +82,7 @@ export default function PdfContentForm({ pdfData, edit }: FormContentProps) {
                 [key]: {
                     //@ts-ignore
                     ...prev[key as ProposalKey],
-                    [name]: value
+                    [name]: formattedValue
                 }
             }));
         }

@@ -65,12 +65,13 @@ export default function TemplateForm({ templateData }: FormContentProps) {
     ]);
 
     const onChange = (key: string, e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-        const { name, value } = e.target;
-        console.log(key, name, value)
+        const { name, value, type } = e.target;
+
+        let formattedValue = type === 'number' ? Number(value) : value
         if (key === '') {
             setTemplate((prev) => ({
                 ...prev,
-                [name]: value
+                [name]: formattedValue
             }));
         } else {
             setTemplate((prev) => ({
@@ -78,7 +79,7 @@ export default function TemplateForm({ templateData }: FormContentProps) {
                 [key]: {
                     //@ts-ignore
                     ...prev[key as TemplateKey],
-                    [name]: value
+                    [name]: formattedValue
                 }
             }));
         }
@@ -125,8 +126,42 @@ export default function TemplateForm({ templateData }: FormContentProps) {
     };
 
     const onSubmit = () => {
+        const {
+            title,
+            invoicing_details,
+            estimates,
+            resource_estimates,
+            project_details,
+        } = template;
+
+        const allFieldsFilled =
+            title &&
+            invoicing_details.initial_invoice_amount &&
+            invoicing_details.minimum_retainer_amount &&
+            estimates.estimated_cost &&
+            estimates.estimated_hours &&
+            resource_estimates.engineering_rate >= 0 &&
+            resource_estimates.engineering_percentage >= 0 &&
+            resource_estimates.architecture_rate >= 0 &&
+            resource_estimates.architecture_percentage >= 0 &&
+            resource_estimates.sr_architecture_rate >= 0 &&
+            resource_estimates.sr_architecture_percentage >= 0 &&
+            project_details.language &&
+            project_details.description &&
+            project_details.deliverables;
+
+        if (!allFieldsFilled || !percentagesValid) {
+            setNotification({
+                type: "error",
+                message:
+                    "Please complete all fields and ensure percentages add up to 100%.",
+            });
+            return;
+        }
+
         const TemplateResult = JSON.stringify(template);
         console.log(TemplateResult);
+
         fetcher.submit(
             { template: TemplateResult },
             {

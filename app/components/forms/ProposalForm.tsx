@@ -51,7 +51,8 @@ export default function ProposalForm({ proposalData }: FormContentProps) {
             description: "",
             deliverables: "",
 
-        }
+        },
+        created_at: new Date()
     });
 
     useEffect(() => {
@@ -86,12 +87,13 @@ export default function ProposalForm({ proposalData }: FormContentProps) {
     ]);
 
     const onChange = (key: string, e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-        const { name, value } = e.target;
-        console.log(key, name, value)
+        const { name, value, type } = e.target;
+        let formattedValue = type === 'number' ? Number(value) : value
+
         if (key === '') {
             setProposal((prev) => ({
                 ...prev,
-                [name]: value
+                [name]: formattedValue
             }));
         } else {
             setProposal((prev) => ({
@@ -99,7 +101,7 @@ export default function ProposalForm({ proposalData }: FormContentProps) {
                 [key]: {
                     //@ts-ignore
                     ...prev[key as ProposalKey],
-                    [name]: value
+                    [name]: formattedValue
                 }
             }));
         }
@@ -146,8 +148,51 @@ export default function ProposalForm({ proposalData }: FormContentProps) {
     };
 
     const onSubmit = () => {
+        const {
+            prepared_by,
+            company_information,
+            invoicing_details,
+            estimates,
+            resource_estimates,
+            project_details
+        } = proposal;
+
+        const requiredFields = [
+            prepared_by,
+            company_information.presented_to_name,
+            company_information.company_name,
+            company_information.email_address,
+            invoicing_details.initial_invoice_amount,
+            invoicing_details.minimum_retainer_amount,
+            estimates.estimated_cost,
+            estimates.estimated_hours,
+            resource_estimates.engineering_rate,
+            resource_estimates.engineering_percentage,
+            resource_estimates.architecture_rate,
+            resource_estimates.architecture_percentage,
+            resource_estimates.sr_architecture_rate,
+            resource_estimates.sr_architecture_percentage,
+            project_details.language,
+            project_details.description,
+            project_details.deliverables
+        ];
+
+        const hasEmptyField = requiredFields.some((field) => {
+            if (typeof field === "string") return field.trim() === "";
+            if (typeof field === "number") return isNaN(field);
+            return !field;
+        });
+
+        if (hasEmptyField || !percentagesValid) {
+            setNotification({
+                type: "error",
+                message:
+                    "Please complete all fields and ensure percentages add up to 100%.",
+            });
+            return;
+        }
+
         const proposalResult = JSON.stringify(proposal);
-        console.log(proposalResult);
         fetcher.submit(
             { proposal: proposalResult },
             {
@@ -181,7 +226,7 @@ export default function ProposalForm({ proposalData }: FormContentProps) {
                     })
                     .catch(err => {
                         console.error("Error fetching PDF content:", err);
-                        setNotification({ type: "error", message: `Proposal saved, but PDF content in ${getLanguageLabel(language as 'es'| 'en')} it may not exist.` });
+                        setNotification({ type: "error", message: `Proposal saved, but PDF content in ${getLanguageLabel(language as 'es' | 'en')} it may not exist.` });
                     });
             }
         }
@@ -198,7 +243,7 @@ export default function ProposalForm({ proposalData }: FormContentProps) {
             )}
 
             <Title>Prepared by</Title>
-            <Description>Select the name of the creator of nthe proposal</Description>
+            <Description>Select the name of the creator of the proposal</Description>
             <FormContent>
                 <FormField
                     label="Choose person"

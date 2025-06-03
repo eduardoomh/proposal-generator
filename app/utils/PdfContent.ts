@@ -57,19 +57,34 @@ export function formatPrismaToPDFContent(prismaContent: any): PDFContentI {
   };
 }
 
-export function extractParagraphsFromHTML(html: string): string[] {
+interface TemplateVariables {
+  company_name?: string;
+  [key: string]: string | undefined;
+}
+
+export function extractParagraphsFromHTML(html: string, vars?: TemplateVariables): string[] {
   const regex = /<p[^>]*>(.*?)<\/p>/gi;
   const paragraphs: string[] = [];
   let match;
 
   while ((match = regex.exec(html)) !== null) {
-    const cleanText = match[1]
+    let cleanText = match[1]
       .replace(/<br\s*\/?>/gi, '\n') // reemplaza <br> por saltos de línea
       .replace(/<\/?[^>]+(>|$)/g, '') // elimina cualquier otra etiqueta HTML
       .trim();
 
+    // Reemplazar variables dinámicas si están presentes
+    if (vars) {
+      for (const [key, value] of Object.entries(vars)) {
+        if (value) {
+          const varPattern = new RegExp(`\\$\\{${key}\\}`, 'g');
+          cleanText = cleanText.replace(varPattern, value);
+        }
+      }
+    }
+
     if (cleanText) {
-      paragraphs.push(cleanText + '\n'); // <- salto de línea adicional entre párrafos
+      paragraphs.push(cleanText + '\n');
     }
   }
 
