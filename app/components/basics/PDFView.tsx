@@ -1,7 +1,7 @@
 
 import { Document, Page, Text, Image, View, StyleSheet } from '@react-pdf/renderer'
 import { useState } from 'react';
-import { registerMontserratFonts } from '~/utils/Fonts';
+//import { registerMontserratFonts } from '~/utils/Fonts';
 import { extractParagraphsFromHTML } from '~/utils/PdfContent';
 import { extractFormattedContentFromHTMLv2 } from '~/utils/PdfUtils';
 
@@ -171,7 +171,7 @@ export default function PDFView(props: Props) {
         { label: "Engineer", percentage: proposal.resource_estimates.engineering_percentage },
     ])
 
-    registerMontserratFonts();
+    //registerMontserratFonts();
 
     return (
         <Document>
