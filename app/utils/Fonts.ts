@@ -5,31 +5,31 @@ export function registerMontserratFonts() {
     family: 'Montserrat',
     fonts: [
       {
-        src: '/fonts/montserrat/Montserrat-Regular.ttf',
+        src: 'https://bimaqujlbuunpcprllcv.supabase.co/storage/v1/object/public/ip-insights-support//Montserrat-Regular.ttf',
         fontWeight: 'normal',
       },
       {
-        src: '/fonts/montserrat/Montserrat-Italic.ttf',
+        src: 'https://bimaqujlbuunpcprllcv.supabase.co/storage/v1/object/public/ip-insights-support//Montserrat-Italic.ttf',
         fontStyle: 'italic',
       },
       {
-        src: '/fonts/montserrat/Montserrat-Medium.ttf',
+        src: 'https://bimaqujlbuunpcprllcv.supabase.co/storage/v1/object/public/ip-insights-support//Montserrat-Medium.ttf',
         fontWeight: 500,
       },
       {
-        src: '/fonts/montserrat/Montserrat-SemiBold.ttf',
+        src: 'https://bimaqujlbuunpcprllcv.supabase.co/storage/v1/object/public/ip-insights-support//Montserrat-SemiBold.ttf',
         fontWeight: 600,
       },
       {
-        src: '/fonts/montserrat/Montserrat-Bold.ttf',
+        src: 'https://bimaqujlbuunpcprllcv.supabase.co/storage/v1/object/public/ip-insights-support//Montserrat-Bold.ttf',
         fontWeight: 'bold',
       },
       {
-        src: '/fonts/montserrat/Montserrat-ExtraBold.ttf',
+        src: 'https://bimaqujlbuunpcprllcv.supabase.co/storage/v1/object/public/ip-insights-support//Montserrat-ExtraBold.ttf',
         fontWeight: 800,
       },
       {
-        src: '/fonts/montserrat/Montserrat-Black.ttf',
+        src: 'https://bimaqujlbuunpcprllcv.supabase.co/storage/v1/object/public/ip-insights-support//Montserrat-Black.ttf',
         fontWeight: 900,
       },
     ],

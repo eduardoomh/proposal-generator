@@ -1,7 +1,7 @@
 
 import { Document, Page, Text, Image, View, StyleSheet } from '@react-pdf/renderer'
 import { useState } from 'react';
-//tffimport { registerMontserratFonts } from '~/utils/Fonts';
+import { registerMontserratFonts } from '~/utils/Fonts';
 import { extractParagraphsFromHTML } from '~/utils/PdfContent';
 import { extractFormattedContentFromHTMLv2 } from '~/utils/PdfUtils';
 
@@ -22,27 +22,23 @@ export const styles = StyleSheet.create({
     short_text: {
         fontSize: '8px',
         color: 'gray',
-        fontFamily: "Montserrat",
         fontWeight: '600',
     },
     general_text: {
         fontSize: '8px',
         color: 'black',
         marginBottom: '4px',
-        fontFamily: "Montserrat",
         fontWeight: '500'
     },
     section_title: {
         color: '#1790c1',
         fontSize: '14px',
         marginBottom: '4px',
-        fontFamily: "Montserrat",
         fontWeight: '600'
     },
     section_title_2: {
         color: '#1790c1',
         fontSize: '14px',
-        fontFamily: "Montserrat",
         fontWeight: '600'
     },
     alert_msg_1: {
@@ -51,7 +47,6 @@ export const styles = StyleSheet.create({
         padding: '8px',
         fontSize: '8px',
         marginBottom: '4px',
-        fontFamily: "Montserrat",
         fontWeight: '500',
         borderRadius: '2px'
     },
@@ -62,7 +57,6 @@ export const styles = StyleSheet.create({
         fontSize: '8px',
         marginBottom: '4px',
         marginTop: '4px',
-        fontFamily: "Montserrat",
         fontWeight: '500',
         borderRadius: '2px'
     },
@@ -72,7 +66,6 @@ export const styles = StyleSheet.create({
         padding: '8px',
         fontSize: '8px',
         marginBottom: '4px',
-        fontFamily: "Montserrat",
         fontWeight: '500',
         borderRadius: '2px'
     },
@@ -141,12 +134,10 @@ export const styles = StyleSheet.create({
     },
     bold: {
         fontWeight: 700,
-        fontFamily: "Montserrat",
     },
     list_item_text: {
         fontSize: 8,
         color: 'black',
-        fontFamily: "Montserrat",
         fontWeight: '500',
         marginBottom: 2, // más compacto que general_text
     },
@@ -171,14 +162,14 @@ export default function PDFView(props: Props) {
         { label: "Engineer", percentage: proposal.resource_estimates.engineering_percentage },
     ])
 
-    //registerMontserratFonts();
+    registerMontserratFonts();
 
     return (
         <Document>
             <Page size="A4" style={styles.page}>
                 <View style={styles.headerContainer}>
                     <Image
-                        src="/IP-insight-support-banner.webp"
+                        src="/IP-insight-support-banner_oficial.png"
                         style={styles.logo}
                     />
                 </View>
@@ -279,7 +270,6 @@ export default function PDFView(props: Props) {
                                     <Text
                                         style={{
                                             fontSize: 8,
-                                            fontFamily: "Montserrat",
                                             fontWeight: 600,
                                             width: 80,
                                         }}
@@ -313,7 +303,6 @@ export default function PDFView(props: Props) {
                                                     style={{
                                                         fontSize: 6,
                                                         color: "white",
-                                                        fontFamily: "Montserrat",
                                                         fontWeight: 600,
                                                     }}
                                                 >

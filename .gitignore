@@ -10,3 +10,5 @@ node_modules
 /public/fonts/
 /public/fonts/montserrat
 
+.DS_Store
+public/.DS_Store
