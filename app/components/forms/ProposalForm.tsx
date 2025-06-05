@@ -20,6 +20,11 @@ type ProposalKey = keyof ProposalI;
 export default function ProposalForm({ proposalData }: FormContentProps) {
     const fetcher = useFetcher();
     const isLoading = fetcher.state !== "idle";
+    const [sellers, setSellers] = useState<{ label: string; value: string }[]>([
+        { value: "Abraham Ríos", label: "Abraham Ríos" },
+        { value: "Robert Riera", label: "Robert Riera" },
+        { value: "Jorge Fernandez", label: "Jorge Fernandez" },
+    ]);
     const [notification, setNotification] = useState<{ type: "success" | "error"; message: string } | null>(null);
     const [percentagesValid, setPercentagesValid] = useState(true);
     const [proposal, setProposal] = useState({
@@ -232,6 +237,21 @@ export default function ProposalForm({ proposalData }: FormContentProps) {
         }
     }, [fetcher.data]);
 
+    useEffect(() => {
+        fetch("/api/configuration")
+            .then(res => res.json())
+            .then(data => {
+                console.log(data, "oh la data")
+                if (Array.isArray(data[0].sellers)) {
+                    const formatted = data[0].sellers.map((s: string) => ({ label: s, value: s }));
+                    setSellers(formatted);
+                }
+            })
+            .catch(err => {
+                console.error("Failed to load sellers:", err);
+            });
+    }, []);
+
     return (
         <MainContainer>
             {notification && (
@@ -250,11 +270,7 @@ export default function ProposalForm({ proposalData }: FormContentProps) {
                     name="choose_person"
                     type="select"
                     value={proposal.choose_person}
-                    options={[
-                        { value: "Abraham Ríos", label: "Abraham Ríos" },
-                        { value: "Robert Riera", label: "Robert Riera" },
-                        { value: "Jorge Fernandez", label: "Jorge Fernandez" },
-                    ]}
+                    options={sellers}
                     onChange={(e: any) => onSelectChange('', 'choose_person', e)}
                 />
                 <FormField

@@ -114,6 +114,13 @@ model PDFContent {
 
   @@map("pdf_content")
 }
+model Configuration {
+  id        String   @id @default(cuid())
+  sellers   Json     // Lista de usuarios/vendedores (puede ser emails, IDs, o estructuras completas)
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("configurations")
+}
 
 // Enum for language
 enum Language {

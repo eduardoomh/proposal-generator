@@ -45,6 +45,14 @@ export function DesktopLayout() {
               PDF Content
             </Link>
           </li>
+          <li>
+            <Link
+              to="/configuration"
+              className="font-medium text-sm p-2 rounded hover:bg-hoverPrimary"
+            >
+              Configuration
+            </Link>
+          </li>
         </ul>
 
         {/* Mobile menu toggle */}
@@ -85,6 +93,15 @@ export function DesktopLayout() {
               onClick={toggleMenu}
             >
               PDF Content
+            </Link>
+          </li>
+          <li>
+            <Link
+              to="/configuration"
+              className="block font-medium text-sm p-2 rounded hover:bg-hoverPrimary"
+              onClick={toggleMenu}
+            >
+              Configuration
             </Link>
           </li>
         </ul>
