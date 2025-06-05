@@ -8,6 +8,7 @@ import Button from "../basics/Button";
 import SellersTable from "../tables/SellersTable";
 import SkeletonConfiguration from "../skeletons/SkeletonConfiguration";
 import Notification from "../basics/Notification";
+import { Plus } from "lucide-react";
 
 interface ConfigurationI {
     id: string;
@@ -149,10 +150,11 @@ export default function ConfigurationForm({ configData, edit, loading }: FormCon
                     />
                     <button
                         onClick={handleAddSeller}
-                        className="bg-blue-600 text-white px-3 rounded"
+                        className="bg-primary text-white px-3 rounded px-4 py-2 hover:bg-primary/90 transition flex items-center gap-2"
                         type="button"
                         disabled={loading}
                     >
+                        <Plus className="w-4 h-4" />
                         Add
                     </button>
                 </div>
